@@ -1,0 +1,1 @@
+# A sample Haskell project use for Learning
