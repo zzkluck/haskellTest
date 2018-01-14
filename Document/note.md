@@ -92,6 +92,95 @@ $$[x, f(x), f(f(x)),f(f(f(x))),...]$$
     (^^) :: (Fractional a, Integral b) => a -> b -> a   --任意整数次幂
     (**) :: (Floating a) => a -> a -> a                 --分数次幂
 ```
+
+### 标准库函数reverse
+```haskell
+    reverse :: [a] -> [a]
+```
+反转一个列表
+
+### 标准库函数filter
+```haskell
+    filter :: (a -> Bool) -> [a] -> [a]
+```
+filter返回列表中所有满足predicate的元素的列表
+
+### 标准库函数null
+```haskell
+    Foldable t => t a -> Bool
+```
+返回一个列表是否为空
+
+### 标准库函数iterate
+```haskell
+    iterate :: (a -> a) -> a -> [a]
+    iterate f x = x : iterate f (f x)
+```
+这将返回一个无穷列表。另外，相信你一定想起了until：
+```haskell
+    until = head . filter p . iterate f
+```
+### 标准库函数head,last,tail,length
+```haskell
+    
+```
+
+### 列表List
+```haskell
+    data List a = Nil | Cons a (List a)
+```
+haskell语法支持枚举整数列表：
+```haskell
+    [m..n]
+    [m..]
+    [m,n..p]
+    [m,n..]
+```
+事实上枚举并不局限于整数。所有Enum类族的类型都可以使用枚举。
+
+haskell支持所谓的“列表概括”语法：
+```haskell
+    [x* x | x <- [1..5]]
+    [x* x | x <- [1..5], isPrime x]
+    divisors x = [d | d <- [2..x-1], x `mod` d == 0]
+    disjoint xs ys = null [x|x<-xs, y<-ys, x==y]
+    ...
+```
+列表概括可以用来定义列表上的某些常用函数：
+```haskell
+    map f xs    = [f x | x <- xs]
+    filter p xs = [x | x <- xs, p x]
+    concat xss  = [x | xs <- xss, x <-xs]
+```
+当然haskell中的实际情况是反过来，列表概括用这些函数定义.
+
+### 标准库函数map, filter, concat
+```haskell
+    concat :: [[a]] -> [a]
+    concat []           = []
+    concat [xs:xss]     = xs ++ concat xss
+
+    map :: (a -> b) -> [a] -> [b]
+    map f []            = []
+    map f [x:xs]        = f x:map f xs
+
+    filter :: (a -> Bool) -> [a] -> [a]
+    filter p []         = []
+    filter p [x:xs]     = if p x then x:filter p xs
+                            else filter p xs
+    
+    --filter还有另一种定义
+    filter p xs = concat.map(test p) xs
+                where test p x = if p x then [x] else []
+```
+
+### map与函子
+map有两个基本性质：
+```haskell
+    map id      = id            --两边id类型不同
+    map (f. g)  = map f. map g
+```
+
 # Other
 
 ### VSCode扩展“Markdown Preview Enhanced”
